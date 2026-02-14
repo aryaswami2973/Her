@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mahak & Arya - Chaos Duo</title>
+
+<style>
+body{
+margin:0;
+font-family:Arial, sans-serif;
+background:linear-gradient(135deg,#89f7fe,#66a6ff);
+text-align:center;
+padding:20px;
+transition:0.6s;
+}
+
+.container{
+max-width:500px;
+margin:auto;
+}
+
+button{
+padding:12px 20px;
+margin:10px;
+border:none;
+border-radius:25px;
+font-size:16px;
+cursor:pointer;
+}
+
+.primary{background:white;color:#0077ff;}
+.dark{background:black;color:white;}
+.nextBtn{background:#0077ff;color:white;}
+
+.progress{
+height:8px;
+background:#cce6ff;
+border-radius:10px;
+overflow:hidden;
+margin-top:20px;
+}
+
+.bar{
+height:100%;
+width:0%;
+background:#0077ff;
+transition:0.4s;
+}
+
+#response{
+margin-top:20px;
+font-size:17px;
+min-height:60px;
+font-weight:bold;
+}
+
+.photo-section{
+margin-top:25px;
+display:flex;
+justify-content:center;
+gap:10px;
+flex-wrap:wrap;
+}
+
+.photo-section img{
+width:45%;
+border-radius:15px;
+box-shadow:0 6px 15px rgba(0,0,0,0.25);
+opacity:0;
+transform:scale(0.9);
+animation:fadeZoom 1.2s ease forwards;
+}
+
+.photo-section img:nth-child(2){
+animation-delay:0.4s;
+}
+
+@keyframes fadeZoom{
+to{
+opacity:1;
+transform:scale(1);
+}
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+<h1>Mahak 😎 & Arya 😂</h1>
+<p>15-Round Bestfriend Chaos Challenge</p>
+
+<div class="progress">
+<div class="bar" id="bar"></div>
+</div>
+
+<h2 id="question"></h2>
+<div id="options"></div>
+<div id="response"></div>
+<div id="nextArea"></div>
+<div id="photoArea" class="photo-section"></div>
+
+</div>
+
+<script>
+
+let current = 0;
+
+const data = [
+
+{q:"1. Is Arya your favourite troublemaker? 😏", type:"yesno",
+yes:"Correct. Arya officially certified troublemaker 😎",
+no:"Denial rejected. Evidence available."},
+
+{q:"2. Who talks more nonsense? 😂", type:"meYou",
+me:"Mahak confidently accepting chaos crown 😎",
+you:"Blaming Arya again 😂 Classic move."},
+
+{q:"3. Who has more attitude? 😎", type:"meYou",
+me:"Mahak attitude level: Elite edition.",
+you:"Arya attitude detected but manageable 😂"},
+
+{q:"4. Who replies late on purpose? 😜", type:"meYou",
+me:"Mahak typing... typing... still typing 😂",
+you:"Arya seen online but ignoring 👀"},
+
+{q:"5. If you fight, who says sorry first? 😆", type:"meYou",
+me:"Mahak mature mode activated 😌",
+you:"Arya emotional damage accepted 😂"},
+
+{q:"6. Who eats more food? 🍕", type:"meYou",
+me:"Mahak secret food champion 🏆",
+you:"Arya calories detected 😂"},
+
+{q:"7. If Arya ignores you, will you survive? 🤨", type:"yesno",
+yes:"Strong independent energy detected.",
+no:"Drama mode activated 🎭"},
+
+{q:"8. Does Arya deserve unlimited hugs? 🤗", type:"yesno",
+yes:"Unlimited hugs unlocked 🤝 VIP access granted.",
+no:"Friendship system glitch detected."},
+
+{q:"9. Who overthinks more (24x7)? 😵", type:"meYou",
+me:"Mahak brain running 24x7 confirmed 🔥",
+you:"Arya declared overthinking minister 😂"},
+
+{q:"10. Are you both high-key chaotic together? 😈", type:"yesno",
+yes:"Chaos duo officially unstoppable 😂",
+no:"Denial phase active."},
+
+{q:"11. Who laughs at their own jokes? 🤡", type:"meYou",
+me:"Mahak self-certified comedian 🎤",
+you:"Arya laughing alone but confidently 😂"},
+
+{q:"12. If Mahak disappears for a day, will Arya panic? 👀", type:"yesno",
+yes:"Alert system triggered 🚨",
+no:"Suspicious calmness detected."},
+
+{q:"13. Who is secretly more emotional? 😌", type:"meYou",
+me:"Mahak soft side revealed 👀",
+you:"Arya emotional buffering complete 😂"},
+
+{q:"14. Should this crazy energy stay forever? 🤝", type:"yesno",
+yes:"Chaos contract signed ✔",
+no:"Contract rejection failed."},
+
+{q:"15. Final question… Bestfriends forever (with free hugs)? 😎", type:"yesno",
+yes:"Legendary Duo Status: UNLOCKED 🔥",
+no:"Nice try. Forever already confirmed."}
+
+];
+
+function loadQuestion(){
+let q = data[current];
+
+document.getElementById("question").innerText = q.q;
+document.getElementById("response").innerText = "";
+document.getElementById("nextArea").innerHTML = "";
+document.getElementById("photoArea").innerHTML = "";
+document.getElementById("bar").style.width = (current/15)*100 + "%";
+
+if(q.type === "meYou"){
+document.getElementById("options").innerHTML = `
+<button class="primary" onclick="meYouAnswer('me')">Mahak 😎</button>
+<button class="dark" onclick="meYouAnswer('you')">Arya 😂</button>
+`;
+}
+else{
+document.getElementById("options").innerHTML = `
+<button class="primary" onclick="yesNoAnswer(true)">Yes 😌</button>
+<button class="dark" onclick="yesNoAnswer(false)">No 🤔</button>
+`;
+}
+}
+
+function meYouAnswer(choice){
+let q = data[current];
+document.getElementById("response").innerText = q[choice];
+showNext();
+}
+
+function yesNoAnswer(isYes){
+let q = data[current];
+document.getElementById("response").innerText = isYes ? q.yes : q.no;
+showNext();
+}
+
+function showNext(){
+document.getElementById("nextArea").innerHTML =
+`<button class="nextBtn" onclick="nextQuestion()">Next ➜</button>`;
+}
+
+function nextQuestion(){
+current++;
+if(current < data.length){
+loadQuestion();
+}else{
+finalScreen();
+}
+}
+
+function finalScreen(){
+document.getElementById("question").innerText =
+"Official Result: Chaos Level Maximum 😎🔥";
+
+document.getElementById("options").innerHTML = "";
+document.getElementById("response").innerText =
+"Certified Bestfriend Duo. Hug access permanent. Drama optional.";
+document.getElementById("bar").style.width="100%";
+
+document.getElementById("photoArea").innerHTML = `
+<img src="photo1.jpg">
+<img src="photo2.jpg">
+`;
+
+document.getElementById("nextArea").innerHTML =
+`<button class="nextBtn" onclick="celebrate()">Accept Legendary Title 🏆</button>`;
+}
+
+function celebrate(){
+alert("Mahak & Arya = Unbreakable Chaos Energy 24x7 😎🤝");
+document.body.style.background="linear-gradient(135deg,#ff9a9e,#fad0c4)";
+}
+
+loadQuestion();
+
+</script>
+
+</body>
+</html>
